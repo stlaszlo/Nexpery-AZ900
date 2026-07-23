@@ -399,3 +399,11 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Terraform
+00 lab-infra/001 terraform-resources/rsg-test/versions.tf
+00 lab-infra/001 terraform-resources/rsg-test/.terraform.lock.hcl
+/00 lab-infra/001 terraform-resources/rsg-test/.terraform
+00 lab-infra/001 terraform-resources/rsg-test/.terraform.tfstate.lock.info
+*.tfstate
+*.backup
