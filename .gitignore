@@ -401,9 +401,23 @@ FodyWeavers.xsd
 *.sln.iml
 
 # Terraform
-00 lab-infra/001 terraform-resources/rsg-test/versions.tf
-00 lab-infra/001 terraform-resources/rsg-test/.terraform.lock.hcl
-/00 lab-infra/001 terraform-resources/rsg-test/.terraform
-00 lab-infra/001 terraform-resources/rsg-test/.terraform.tfstate.lock.info
+# Terraform working directory
+.terraform/
+
+# Local state
 *.tfstate
-*.backup
+*.tfstate.*
+
+# Variable and backend files containing environment-specific data
+*.tfvars
+backend.hcl
+
+# Plan files
+*.tfplan
+
+# Crash logs
+crash.log
+crash.*.log
+
+# macOS
+.DS_Store
