@@ -23,3 +23,15 @@ variable "students" {
     management_subnet = string
   }))
 }
+
+variable "nva_admin_username" {
+  description = "Administrative username for the NVA Linux VMs"
+  type        = string
+  default     = "azureadmin"
+}
+
+variable "nva_ssh_public_key_path" {
+  description = "Path to the SSH public key used for NVA administration"
+  type        = string
+
+}

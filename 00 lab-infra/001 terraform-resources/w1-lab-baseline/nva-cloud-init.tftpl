@@ -1,0 +1,71 @@
+#cloud-config
+
+hostname: ${hostname}
+
+package_update: true
+package_upgrade: false
+
+packages:
+  - nftables
+  - curl
+  - wget
+  - gnupg
+  - ca-certificates
+  - netcat-openbsd
+
+write_files:
+  - path: /etc/sysctl.d/99-nva.conf
+    permissions: '0644'
+    content: |
+      net.ipv4.ip_forward=1
+
+  - path: /etc/nftables.conf
+    permissions: '0644'
+    content: |
+      flush ruleset
+
+      table inet filter {
+        chain input {
+          type filter hook input priority 0;
+          policy accept;
+        }
+
+        chain forward {
+          type filter hook forward priority 0;
+          policy accept;
+        }
+
+        chain output {
+          type filter hook output priority 0;
+          policy accept;
+        }
+      }
+
+  - path: /etc/systemd/system/nva-health.service
+    permissions: '0644'
+    content: |
+      [Unit]
+      Description=NVA TCP health probe listener
+      After=network-online.target
+
+      [Service]
+      ExecStart=/usr/bin/nc -lk -p 9000
+      Restart=always
+      RestartSec=2
+
+      [Install]
+      WantedBy=multi-user.target
+
+runcmd:
+  - sysctl --system
+  - systemctl enable nftables
+  - systemctl restart nftables
+  - systemctl daemon-reload
+  - systemctl enable nva-health
+  - systemctl start nva-health
+
+  # Webmin repository
+  - curl -o /tmp/webmin-setup-repo.sh https://raw.githubusercontent.com/webmin/webmin/master/webmin-setup-repo.sh
+  - sh /tmp/webmin-setup-repo.sh
+  - apt-get update
+  - DEBIAN_FRONTEND=noninteractive apt-get install -y webmin

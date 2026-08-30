@@ -25,3 +25,16 @@ output "student_environments" {
     }
   }
 }
+
+output "nva_load_balancer_frontend_ip" {
+  description = "Internal Load Balancer frontend IP used as the NVA next hop"
+  value       = azurerm_lb.nva.frontend_ip_configuration[0].private_ip_address
+}
+
+output "nva_private_ips" {
+  description = "Private IP addresses of the NVA instances"
+  value = {
+    for name, nic in azurerm_network_interface.nva :
+    name => nic.private_ip_address
+  }
+}
